@@ -7,6 +7,31 @@ CREATE TABLE `oauth_provider_consumer` (
 `consumer_create_date` int(11) NOT NULL,
 PRIMARY KEY (`consumer_id`)
 );
+/* MS Sql
+CREATE TABLE api.dbo.oauth_provider_consumer (
+  consumer_id int NOT NULL identity(1,1) ,
+  consumer_key varchar(40) NOT NULL,
+  consumer_secret varchar(40) NOT NULL,
+  consumer_create_date int NOT NULL,
+  user_id int Not Null,
+  createddate datetime not null default getdate(),
+  PRIMARY KEY (consumer_id)
+)
+
+
+create table api.dbo.api_access (
+  id int NOT NULL identity(1,1) ,
+  consumer_id int NOT NULL ,
+  consumer_key varchar(40) not null ,
+  api_object varchar(40) not null ,
+  access_allowed bool not null ,
+  createddate datetime not null default getdate(),
+  PRIMARY KEY (id)
+)
+
+
+*/
+
 
 # Could be emptied by a cronjonb every five minutes for each row where nonce_data < now() - 5 minutes
 CREATE TABLE `oauth_provider_nonce` (

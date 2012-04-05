@@ -35,6 +35,8 @@
  */
 
 require_once(__DIR__ . '/AutoLoader.php');
+require_once(__DIR__ . '../../../../inc.configuration.php');
+
 new AutoLoader();
 
 class Configuration
@@ -52,12 +54,14 @@ class Configuration
 		static $DataStore;
 
 		if (!isset($DataStore)) {
-			$DataStore = new mysqli('localhost', 'root', '', 'oauth');
+//            $DataStore = new mysqli('localhost', 'root', '', 'oauth');
+            $DataConn = new Database();
+            $DataStore = $DataConn->connection();
 
-			if ($DataStore->connect_error) {
-				throw new DataStoreConnectException($DataStore->connect_error);
-				exit;
-			}
+//			if ($DataStore->connect_error) {
+//				throw new DataStoreConnectException($DataStore->connect_error);
+//				exit;
+//			}
 		}
 
 		return $DataStore;

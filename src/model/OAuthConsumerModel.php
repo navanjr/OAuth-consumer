@@ -52,6 +52,8 @@ class OAuthConsumerModel extends ModelBase
 	 * @var int (timestamp)
 	 */
 	private $consumerCreateDate;
+    private $consumerUserId;
+    private $userSystem;
 
 
 // CRUD functions
@@ -94,13 +96,15 @@ class OAuthConsumerModel extends ModelBase
 	 */
 	protected function create()
 	{
-		$sql = "INSERT INTO `oauth_provider_consumer`
-				SET `consumer_key` = '" . $this->DataStore->real_escape_string($this->consumerKey) . "',
-					`consumer_secret` = '" . $this->DataStore->real_escape_string($this->consumerSecret) . "',
-					`consumer_create_date` = '" . $this->DataStore->real_escape_string($this->consumerCreateDate) . "'";
+		$sql = "INSERT INTO api.dbo.oauth_provider_consumer ( consumer_key, consumer_secret, consumer_create_date, user_id, user_system )
+				VALUES ( '" . $this->DataStore->real_escape_string($this->consumerKey) . "',
+					     '" . $this->DataStore->real_escape_string($this->consumerSecret) . "',
+                         '" . $this->DataStore->real_escape_string($this->consumerCreateDate) . "',
+                         " . $this->DataStore->real_escape_string($this->consumerUserId) . ",
+                         '" . $this->DataStore->real_escape_string($this->userSystem) . "' )";
 
 		if ($this->DataStore->query($sql)) {
-			$this->tokenId = $this->DataStore->insert_id;
+			$this->tokenId = $this->DataStore->insert_id();
 		} else {
 			throw new DataStoreCreateException("Couldn't save the consumer to the datastore");
 		}
@@ -135,7 +139,7 @@ class OAuthConsumerModel extends ModelBase
 	protected function update()
 	{
 		$sql = "UPDATE `oauth_provider_consumer`
-				SET `consumer_key` = '" . $this->DataStore->real_escape_string($this->consumerKey) . "
+				SET `consumer_key` = '" . $this->DataStore->real_escape_string($this->consumerKey) . "',
 					`consumer_secret` = '" . $this->DataStore->real_escape_string($this->consumerSecret) . "',
 					`consumer_create_date` = '" . $this->DataStore->real_escape_string($this->consumerCreateDate) . "
 				WHERE `consumer_id` = '" . $this->DataStore->real_escape_string($this->consumerId) . "'";
@@ -164,7 +168,18 @@ class OAuthConsumerModel extends ModelBase
 	/**
 	 * @param int (timestamp) $consumerCreateDate
 	 */
-	public function setConsumerCreateDate($consumerCreateDate)
+
+    public function setUserSystem($userSystem)
+    {
+        $this->userSystem = $userSystem;
+    }
+
+    public function setConsumerUserId($consumerUserId)
+    {
+        $this->consumerUserId = $consumerUserId;
+    }
+
+    public function setConsumerCreateDate($consumerCreateDate)
 	{
 		$this->consumerCreateDate = $consumerCreateDate;
 	}
